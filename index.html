@@ -12,6 +12,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+    :root{
+      --max-width:1100px;
+      --page-pad:6%;
+      --accent-1: #b892ff;
+      --accent-2: #c59aff;
+      --card-bg-1: linear-gradient(180deg, rgba(18,10,28,0.95), rgba(8,4,14,0.95));
+      --dark-1: #0b0711;
+      --muted: #ccc;
+    }
+
     /* ---------------- Reset & Base ---------------- */
     * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
     html,body { height: 100%; }
@@ -22,9 +32,19 @@
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    a { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ---------- Layout wrapper to center content ---------- */
+    .wrap {
+      width: calc(100% - (2 * var(--page-pad)));
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
 
     /* ---------- Layout: header ---------- */
     header {
@@ -34,59 +54,79 @@
       width: 100%;
       background: linear-gradient(90deg, rgba(11,6,15,0.95), rgba(8,4,12,0.95));
       border-bottom: 1px solid rgba(255,255,255,0.04);
-      padding: 12px 6%;
+      padding: 12px var(--page-pad);
       display: flex;
       align-items: center;
       justify-content: space-between;
       z-index: 999;
     }
-    header h1 { color: #b892ff; font-size: 1.15rem; letter-spacing: 1px; }
-    .menu-toggle { font-size: 1.5rem; cursor: pointer; color:#fff; display: inline-block; }
+    header .wrap { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0; }
+    header h1 { color: var(--accent-1); font-size: 1.15rem; letter-spacing: 1px; margin:0; }
+    .menu-toggle { font-size: 1.5rem; cursor: pointer; color:#fff; display: inline-flex; align-items:center; justify-content:center; background:transparent; border:none; padding:6px; border-radius:8px; }
+    .menu-toggle:focus { outline:2px solid rgba(200,160,255,0.18); }
 
     nav {
       position: absolute;
-      top: 60px;
-      right: 6%;
+      top: 64px;
+      right: var(--page-pad);
       background: #0f0b17;
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 12px 14px;
       border: 1px solid rgba(90,40,150,0.12);
       display: none;
       box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      min-width: 180px;
     }
     nav.active { display: block; }
-    nav ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
-    nav a { text-decoration:none; color:#e6e0ff; font-weight:600; display:flex; gap:8px; align-items:center; }
+    nav ul { list-style:none; display:flex; flex-direction:column; gap:10px; margin:0; padding:0; }
+    nav a { color:#e6e0ff; font-weight:600; display:flex; gap:8px; align-items:center; }
     nav a:hover { color:#8aefff; text-shadow:0 0 6px rgba(138,239,255,0.12); }
 
+    /* Desktop nav */
     @media (min-width:768px) {
       .menu-toggle { display: none; }
       nav { position: static; display: block !important; background: transparent; border: none; padding: 0; box-shadow: none; }
       nav ul { flex-direction: row; gap: 18px; align-items:center; }
+      nav a { color: #e6e0ff; }
+    }
+
+    /* mobile full-screen menu when active (larger hit area) */
+    @media (max-width:520px) {
+      nav {
+        right: 10px;
+        top: 58px;
+        min-width: 160px;
+      }
+      nav.active {
+        position: fixed;
+        inset: 64px 12px auto 12px;
+        border-radius: 12px;
+        padding: 16px;
+      }
     }
 
     .header-spacer { height: 72px; width: 100%; }
 
     /* ---------- Common Card Style (purple theme) ---------- */
     .card {
-      background: linear-gradient(180deg, rgba(18,10,28,0.95), rgba(8,4,14,0.95));
+      background: var(--card-bg-1);
       border-radius: 14px;
       padding: 20px;
       border: 1px solid rgba(140,80,255,0.14);
       box-shadow: 0 8px 28px rgba(80,20,120,0.12);
-      max-width: 1100px;
+      max-width: var(--max-width);
       margin: 18px auto;
+      overflow: hidden;
     }
 
     /* subtle purple accent header inside cards */
     .card .card-title {
-      color: #c59aff;
+      color: var(--accent-2);
       font-size: 1.6rem;
       margin-bottom: 12px;
       letter-spacing: 0.6px;
     }
 
-    /* smaller inner card (for nested overview inside coin) */
     .card-inner {
       background: rgba(12,8,20,0.9);
       border-radius: 10px;
@@ -97,7 +137,7 @@
 
     /* ---------- Intro / Profile ---------- */
     #intro-profile {
-      padding: 92px 6% 26px; /* account for header */
+      padding: 92px var(--page-pad) 26px; /* account for header */
       text-align: center;
       position: relative;
       overflow: visible;
@@ -106,16 +146,15 @@
     .profile-card {
       position: relative;
       z-index: 2;
-      max-width: 920px;
       margin: 0 auto;
-      padding: 36px 28px;
+      padding: 28px;
       border-radius: 16px;
       border: 1px solid rgba(150,80,255,0.14);
       background: linear-gradient(180deg, rgba(12,6,18,0.95), rgba(6,3,10,0.95));
       box-shadow: 0 10px 36px rgba(60,20,120,0.12);
     }
 
-    /* Profile Picture: increased size a bit, removed glow */
+    /* Profile Picture */
     .pfp-frame { display:inline-block; padding:6px; border-radius:50%; background:transparent; }
     .pfp-frame img {
       width: 190px;
@@ -123,12 +162,12 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid rgba(200,160,255,0.06);
-      box-shadow: none; /* removed glow */
+      box-shadow: none;
       display:block;
       margin: 0 auto;
     }
 
-    .profile-name { color:#c59aff; font-size:2.4rem; margin: 18px 0 10px; font-family:'Times New Roman', serif; }
+    .profile-name { color:var(--accent-2); font-size:2.4rem; margin: 18px 0 10px; font-family:'Times New Roman', serif; }
 
     .experience-subcard {
       display: inline-block;
@@ -143,11 +182,10 @@
     .exp-title { color:#b98cff; font-weight:700; margin-bottom:8px; }
     .exp-list { color:#f5f5f5; font-family:'Georgia',serif; line-height:1.45; white-space:pre-line; }
 
-    /* ---------- About (now wrapped in card as requested) ---------- */
-    #about { padding: 26px 6%; }
+    /* ---------- About ---------- */
+    #about { padding: 26px var(--page-pad); }
     #about .about-card { padding: 26px; }
 
-    /* Hire button (kept) */
     .hire-btn {
       background: linear-gradient(90deg,#6c63ff,#9a80ff);
       color: #fff; border: none; padding: 10px 18px; border-radius: 10px; font-weight:700; cursor:pointer;
@@ -156,15 +194,15 @@
 
     /* ---------- Contact ---------- */
     .contact-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 18px; }
-    .contact-card { background: #0e0b14; padding:14px; border-radius:10px; display:flex; gap:12px; align-items:center; justify-content:center; border:1px solid rgba(100,60,160,0.06); }
+    .contact-card { background: #0e0b14; padding:14px; border-radius:10px; display:flex; gap:12px; align-items:center; justify-content:center; border:1px solid rgba(100,60,160,0.06); color:#e6e6e6; }
 
     /* ---------- Proof of Work ---------- */
-    #proof-of-work { padding: 26px 6%; }
-    .pow-box { padding: 26px; }
+    #proof-of-work { padding: 26px var(--page-pad); }
+    .pow-box { padding: 26px; opacity:0; transform: translateY(12px); transition: all 540ms cubic-bezier(.2,.9,.3,1); }
 
     /* ---------- Coin (main card) ---------- */
-    #coin { padding: 26px 6%; }
-    .coin-box { padding: 18px; border-radius:12px; border: 1px solid rgba(140,80,255,0.12); background: linear-gradient(180deg, rgba(10,6,14,0.96), rgba(6,3,10,0.96)); box-shadow: 0 8px 22px rgba(90,40,150,0.08); }
+    #coin { padding: 26px var(--page-pad); }
+    .coin-box { padding: 18px; border-radius:12px; border: 1px solid rgba(140,80,255,0.12); background: linear-gradient(180deg, rgba(10,6,14,0.96), rgba(6,3,10,0.96)); box-shadow: 0 8px 22px rgba(80,12,100,0.12); }
     .coin-header { display:flex; gap:10px; align-items:center; }
     .coin-header h2 { color:#c49aff; font-size:1.15rem; margin:0; }
     .coin-sub { color:#9fa2b5; margin-top:6px; font-size:0.95rem; }
@@ -174,14 +212,16 @@
     .coin-stats ul { list-style:none; padding:0; margin: 8px 0 0; }
     .coin-stats li { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.03); color:#ddd; }
 
-    /* tags/integrations */
     .tags, .integrations, .try { color:#a0a0c0; margin-top:8px; }
 
     /* ---------- Overview (inner card) ---------- */
-    .overview-inner { margin-top:12px; padding:12px; border-radius:10px; background:rgba(14,10,18,0.9); border:1px solid rgba(140,80,255,0.08); color:#ccc; }
+    .overview-inner { margin-top:12px; padding:12px; border-radius:10px; background:rgba(14,10,18,0.9); border:1px solid rgba(140,80,255,0.08); color:#ccc; opacity:0; transform: translateY(8px); transition: all 560ms cubic-bezier(.2,.9,.3,1); }
+
+    /* make internal elements responsive */
+    .card-inner h3, .card-inner p, .coin-stats h3 { margin:0; }
 
     /* ---------- Projects / Experience ---------- */
-    #experience { padding: 26px 6%; }
+    #experience { padding: 26px var(--page-pad); }
     .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 18px; }
     .project-card { padding: 16px; border-radius: 12px; background: linear-gradient(145deg,#0b0711,#1b0033); border:1px solid rgba(61,0,122,0.12); color:#fff; box-shadow:0 8px 20px rgba(0,0,0,0.6); }
 
@@ -189,30 +229,31 @@
     .project-card ul { margin:8px 0 12px 16px; }
 
     /* ---------- Skills ---------- */
-    .skills-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap:18px; padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(10,8,14,0.95), rgba(6,3,10,0.95)); border:1px solid rgba(140,80,255,0.06); }
+    .skills-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap:18px; padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(10,8,14,0.95), rgba(6,3,10,0.95)); }
     .skill { text-align:center; color:#ccc; }
     .circle {
       --size:75px; --bar-width:7px;
       width:var(--size); height:var(--size); border-radius:50%;
       background: conic-gradient(#00c6ff 0%, #0072ff 0%, #111 0%);
       position: relative; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;
+      transition: background 400ms ease;
     }
     .circle::before { content: attr(data-percent) "%"; color:#fff; font-weight:700; z-index:2; font-size:0.85rem; }
 
     /* ---------- Footer ---------- */
-    footer { padding: 30px 6%; margin-top: 18px; color:#ccc; text-align:center; border-top:1px solid rgba(140,80,255,0.06); }
+    footer { padding: 30px var(--page-pad); margin-top: 18px; color:#ccc; text-align:center; border-top:1px solid rgba(140,80,255,0.06); }
 
-    /* ---------- Utility responsive tweaks ---------- */
+    /* utility small screens */
     @media (max-width:900px) {
       .pfp-frame img { width: 160px; height:160px; }
       .profile-name { font-size: 2rem; }
       .header-spacer { height: 68px; }
+      .card { margin: 12px; padding: 14px; }
     }
     @media (max-width:600px) {
       .pfp-frame img { width: 140px; height:140px; }
       .profile-name { font-size: 1.5rem; }
       nav { right: 4%; top: 56px; }
-      .card { margin: 12px; padding: 14px; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
@@ -222,32 +263,38 @@
 <body>
 
   <!-- Welcome Overlay -->
-  <div id="welcome-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.88); display:flex; align-items:center; justify-content:center; z-index:9998; color:#fff; font-weight:700; padding:20px;">
-    Welcome to Viktor Portfolio 
+  <div id="welcome-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.88); display:flex; align-items:center; justify-content:center; z-index:9998; color:#fff; font-weight:700; padding:20px; text-align:center;">
+    Welcome to Viktor Portfolio
   </div>
 
   <!-- Header -->
   <header>
-    <h1>𝐌𝐘 𝐏𝐎𝐑𝐓𝐅𝐎𝐋𝐈𝐎</h1>
-    <span class="menu-toggle" aria-label="Open menu" role="button"><i class="fas fa-bars"></i></span>
+    <div class="wrap">
+      <h1>𝐌𝐘 𝐏𝐎𝐑𝐓𝐅𝐎𝐋𝐈𝐎</h1>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <nav id="menu" aria-label="Main navigation">
+          <ul>
+            <li><a href="#about" class="menu-link"><i class="fas fa-user" aria-hidden="true"></i> About</a></li>
+            <li><a href="#experience" class="menu-link"><i class="fas fa-briefcase" aria-hidden="true"></i> Experience</a></li>
+            <li><a href="#skills" class="menu-link"><i class="fas fa-gears" aria-hidden="true"></i> Skills</a></li>
+            <li><a href="#coin" class="menu-link"><i class="fas fa-coins" aria-hidden="true"></i> Coin</a></li>
+            <li><a href="#proof-of-work" class="menu-link"><i class="fas fa-certificate" aria-hidden="true"></i> Proof of Work</a></li>
+            <li><a href="#contact" class="menu-link"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a></li>
+          </ul>
+        </nav>
 
-    <nav id="menu" aria-label="Main navigation">
-      <ul>
-        <li><a href="#about" class="menu-link"><i class="fas fa-user" aria-hidden="true"></i> About</a></li>
-        <li><a href="#experience" class="menu-link"><i class="fas fa-briefcase" aria-hidden="true"></i> Experience</a></li>
-        <li><a href="#skills" class="menu-link"><i class="fas fa-gears" aria-hidden="true"></i> Skills</a></li>
-        <li><a href="#coin" class="menu-link"><i class="fas fa-coins" aria-hidden="true"></i> Coin</a></li>
-        <li><a href="#proof-of-work" class="menu-link"><i class="fas fa-certificate" aria-hidden="true"></i> Proof of Work</a></li>
-        <li><a href="#contact" class="menu-link"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a></li>
-      </ul>
-    </nav>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
   </header>
 
   <div class="header-spacer" aria-hidden="true"></div>
 
   <!-- INTRO / PROFILE (card) -->
   <section id="intro-profile">
-    <div class="profile-card card" role="region" aria-labelledby="intro-title">
+    <div class="profile-card card wrap" role="region" aria-labelledby="intro-title">
       <div class="pfp-frame">
         <!-- kept img src exactly as you provided -->
         <img src="profile.jpg1" alt="profile.jpg1">
@@ -258,13 +305,13 @@
       <div class="experience-subcard">
         <p class="exp-title">Here are my experiences:</p>
         <p class="exp-list">
-|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐈𝐧𝐟𝐫𝐚𝐬𝐭𝐫𝐮𝐜𝐭𝐮𝐫𝐞 𝐁𝐮𝐢𝐥𝐝𝐞𝐫<br>
-|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐌𝐚𝐧𝐚𝐠𝐞𝐫<br>
-|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐌𝐨𝐝𝐞𝐫𝐚𝐭𝐨𝐫<br>
-|| 𝐌𝐚𝐫𝐤𝐞𝐭𝐢𝐧𝐠 𝐒𝐩𝐞𝐜𝐢𝐚𝐥𝐢𝐬𝐭<br>
-|| 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫 𝐚𝐧𝐝 𝐆𝐫𝐚𝐩𝐡𝐢𝐜𝐬<br>
-|| 𝐑𝐚𝐢𝐝 & 𝐒𝐡𝐢𝐥𝐥 𝐋𝐞𝐚𝐝𝐞𝐫<br>
-|| 𝐃𝐢𝐬𝐜𝐨𝐫𝐝/𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐒𝐞𝐫𝐯𝐞𝐫 𝐀𝐫𝐜𝐡𝐢𝐭𝐞𝐜𝐭<br>
+|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐈𝐧𝐟𝐫𝐚𝐬𝐭𝐫𝐮𝐜𝐭𝐮𝐫𝐞 𝐁𝐮𝐢𝐥𝐝𝐞𝐫
+|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐌𝐚𝐧𝐚𝐠𝐞𝐫
+|| 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲 𝐌𝐨𝐝𝐞𝐫𝐚𝐭𝐨𝐫
+|| 𝐌𝐚𝐫𝐤𝐞𝐭𝐢𝐧𝐠 𝐒𝐩𝐞𝐜𝐢𝐚𝐥𝐢𝐬𝐭
+|| 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫 𝐚𝐧𝐝 𝐆𝐫𝐚𝐩𝐡𝐢𝐜𝐬
+|| 𝐑𝐚𝐢𝐝 & 𝐒𝐡𝐢𝐥𝐥 𝐋𝐞𝐚𝐝𝐞𝐫
+|| 𝐃𝐢𝐬𝐜𝐨𝐫𝐝/𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐒𝐞𝐫𝐯𝐞𝐫 𝐀𝐫𝐜𝐡𝐢𝐭𝐞𝐜𝐭
 || 𝐁𝐨𝐭 𝐈𝐧𝐭𝐞𝐠𝐫𝐚𝐭𝐢𝐨𝐧 & 𝐀𝐮𝐭𝐨𝐦𝐚𝐭𝐢𝐨𝐧 𝐒𝐩𝐞𝐜𝐢𝐚𝐥𝐢𝐬𝐭
         </p>
       </div>
@@ -273,7 +320,7 @@
 
   <!-- ABOUT (now a purple card) -->
   <section id="about">
-    <div class="card about-card">
+    <div class="card about-card wrap">
       <div class="card-title">𝐀𝐛𝐨𝐮𝐭 𝐌𝐞</div>
       <p style="color:#ddd; font-size:1.05rem; line-height:1.7;">
         I’m a <strong>Web3 community specialist</strong> with deep experience in 
@@ -295,17 +342,17 @@
       <h3 style="color:#c59aff; margin-bottom:8px;">Connect With Me 🤝</h3>
       <p style="color:#aaa; margin-bottom:12px;">Choose your preferred platform:</p>
 
-      <a href="https://t.me/vik_torr3" target="_blank" style="display:block; color:#0088cc; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">📩 Telegram</a>
-      <a href="https://x.com/viK_torr3" target="_blank" style="display:block; color:#1DA1F2; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">🐦 X (Twitter)</a>
-      <a href="https://discord.com/users/1401653205464645729" target="_blank" style="display:block; color:#5865F2; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">🎮 Discord</a>
+      <a href="https://t.me/vik_torr3" target="_blank" style="display:block; color:#0088cc; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">Telegram</a>
+      <a href="https://x.com/viK_torr3" target="_blank" style="display:block; color:#1DA1F2; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">X / 𝕏</a>
+      <a href="https://discord.com/users/1401653205464645729" target="_blank" style="display:block; color:#5865F2; background:#0d0d0d; border-radius:8px; margin:8px 0; padding:10px 0; font-weight:bold; text-decoration:none;">Discord</a>
 
       <button onclick="toggleHirePopup()" style="margin-top:12px; background:none; color:#888; border:none; cursor:pointer;">✖ Close</button>
     </div>
   </div>
 
   <!-- CONTACT (card) -->
-  <section id="contact" style="padding: 26px 6%;">
-    <div class="card">
+  <section id="contact" style="padding: 26px var(--page-pad);">
+    <div class="card wrap">
       <div class="card-title">𝐂𝐨𝐧𝐭𝐚𝐜𝐭 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧</div>
 
       <div class="contact-grid" style="margin-top:12px;">
@@ -319,7 +366,7 @@
 
   <!-- PROOF OF WORK (card) -->
   <section id="proof-of-work">
-    <div class="card pow-box">
+    <div class="card pow-box wrap">
       <div class="card-title">My Proof of Work 💼</div>
       <p style="color:#e4e4e4; line-height:1.7;">
         Welcome to my <strong style="color:#b784ff;">Proof of Work Channel</strong> a transparent and authentic space where I share my 
@@ -340,8 +387,8 @@
 
   <!-- COIN (main coin card with inner overview card) -->
   <section id="coin">
-    <div class="card coin-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <div class="card coin-box wrap">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
         <div>
           <div class="coin-header">
             <span class="coin-icon" style="font-size:1.25rem;">🪙</span>
@@ -405,7 +452,7 @@
 
   <!-- EXPERIENCE (Projects & Employments) -->
   <section id="experience">
-    <div class="card">
+    <div class="card wrap">
       <div class="card-title">𝐏𝐫𝐨𝐣𝐞𝐜𝐭𝐬 & 𝐄𝐦𝐩𝐥𝐨𝐲𝐦𝐞𝐧𝐭𝐬</div>
 
       <div class="grid" style="margin-top:12px;">
@@ -418,7 +465,7 @@
             <li>Announcements & updates</li>
             <li>Community building</li>
           </ul>
-          <a href="https://discord.gg/WcUz7zgNbv" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/WcUz7zgNbv" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Floaters -->
@@ -431,7 +478,7 @@
             <li>Community building</li>
             <li>X (Twitter) management</li>
           </ul>
-          <a href="https://discord.gg/YtptBae6Mm" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/YtptBae6Mm" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Narrrf's World -->
@@ -443,7 +490,7 @@
             <li>Promotional content creation</li>
             <li>Community outreach</li>
           </ul>
-          <a href="https://discord.gg/AMs6ysaxTt" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/AMs6ysaxTt" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- APOCAT -->
@@ -455,7 +502,7 @@
             <li>Community management</li>
             <li>Engagement growth & strategies</li>
           </ul>
-          <a href="https://discord.gg/k7DQXsTG" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/k7DQXsTG" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Danny Wet Raccoon -->
@@ -466,7 +513,7 @@
             <li>Telegram engagement</li>
             <li>Community interaction</li>
           </ul>
-          <a href="https://t.me/+2Nj8sULTMjRkODll" target="_blank" style="display:inline-block;background:#0088cc;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://t.me/+2Nj8sULTMjRkODll" target="_blank" style="display:inline-block;background:#0088cc;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- 7heaven -->
@@ -477,7 +524,7 @@
             <li>Moderation & server growth</li>
             <li>Engagement activities</li>
           </ul>
-          <a href="https://discord.gg/Xgk4ttezbG" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/Xgk4ttezbG" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- PacTON -->
@@ -488,7 +535,7 @@
             <li>Telegram moderation</li>
             <li>Announcements & updates</li>
           </ul>
-          <a href="https://t.me/pactonoffical1" target="_blank" style="display:inline-block;background:#0088cc;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://t.me/pactonoffical1" target="_blank" style="display:inline-block;background:#0088cc;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Painless Coin -->
@@ -499,7 +546,7 @@
             <li>Handled daily support & moderation</li>
             <li>Kept chats safe & welcoming</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Alpha Coin -->
@@ -510,7 +557,7 @@
             <li>Ran community engagement campaigns</li>
             <li>Shared updates & AMA coordination</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jaWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jaWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Hero Coin -->
@@ -521,7 +568,7 @@
             <li>Organized giveaways & events</li>
             <li>Boosted retention through engagement</li>
           </ul>
-          <a href="https://discord.gg/QXVh5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVh5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Monkey Coin -->
@@ -532,7 +579,7 @@
             <li>Created content & announcements</li>
             <li>Helped grow & engage new members</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Raiderz -->
@@ -543,7 +590,7 @@
             <li>Maintained rules & order in chats</li>
             <li>Assisted with new user onboarding</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Golden Coin -->
@@ -554,7 +601,7 @@
             <li>Marketing leader</li>
             <li>Kept members active & informed</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Defi Labs -->
@@ -565,7 +612,7 @@
             <li>Supported DeFi discussions</li>
             <li>Helped with announcements & updates</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- REAL TRUMP -->
@@ -576,7 +623,7 @@
             <li>Organized fun activities & polls</li>
             <li>Kept chats active & engaged</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Fish Coin -->
@@ -587,7 +634,7 @@
             <li>Helped with events, contests and partnerships</li>
             <li>Raid and Shill Lead</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
 
         <!-- Apex -->
@@ -598,33 +645,33 @@
             <li>Set up events & collaborations</li>
             <li>Drove growth & engagement campaigns</li>
           </ul>
-          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join Server</a>
+          <a href="https://discord.gg/QXVs5jsWNp" target="_blank" style="display:inline-block;background:#5865F2;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;">Join</a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- SKILLS -->
-  <section id="skills" style="padding: 26px 6%;">
-    <div class="card">
+  <section id="skills" style="padding: 26px var(--page-pad);">
+    <div class="card wrap">
       <div class="card-title">𝐂𝐨𝐫𝐞 𝐒𝐤𝐢𝐥𝐥𝐬 🛠</div>
 
       <div class="skills-grid" style="margin-top:12px;">
-        <div class="skill"><div class="circle" data-percent="100"></div><p>Community Management</p></div>
-        <div class="skill"><div class="circle" data-percent="100"></div><p>Moderation</p></div>
-        <div class="skill"><div class="circle" data-percent="97"></div><p>Marketing</p></div>
-        <div class="skill"><div class="circle" data-percent="93"></div><p>Web3 Knowledge</p></div>
-        <div class="skill"><div class="circle" data-percent="95"></div><p>Communication</p></div>
-        <div class="skill"><div class="circle" data-percent="96"></div><p>Raiding</p></div>
-        <div class="skill"><div class="circle" data-percent="91"></div><p>Shilling</p></div>
-        <div class="skill"><div class="circle" data-percent="90"></div><p>Conflict Resolution</p></div>
+        <div class="skill"><div class="circle" data-percent="100" aria-hidden="true"></div><p>Community Management</p></div>
+        <div class="skill"><div class="circle" data-percent="100" aria-hidden="true"></div><p>Moderation</p></div>
+        <div class="skill"><div class="circle" data-percent="97" aria-hidden="true"></div><p>Marketing</p></div>
+        <div class="skill"><div class="circle" data-percent="93" aria-hidden="true"></div><p>Web3 Knowledge</p></div>
+        <div class="skill"><div class="circle" data-percent="95" aria-hidden="true"></div><p>Communication</p></div>
+        <div class="skill"><div class="circle" data-percent="96" aria-hidden="true"></div><p>Raiding</p></div>
+        <div class="skill"><div class="circle" data-percent="91" aria-hidden="true"></div><p>Shilling</p></div>
+        <div class="skill"><div class="circle" data-percent="90" aria-hidden="true"></div><p>Conflict Resolution</p></div>
       </div>
     </div>
   </section>
 
   <!-- TOOLS & KNOWLEDGE (kept as cards and content intact) -->
-  <section id="tools" style="padding: 26px 6%;">
-    <div class="card">
+  <section id="tools" style="padding: 26px var(--page-pad);">
+    <div class="card wrap">
       <div class="card-title">𝐓𝐨𝐨𝐥𝐬 & 𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦𝐬 ⚙</div>
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:12px;">
         <div style="background:linear-gradient(145deg,#111,#1b0033); padding:14px; border-radius:10px; border:1px solid rgba(61,0,122,0.08);">
@@ -644,8 +691,8 @@
   </section>
 
   <!-- KNOWLEDGE BASE -->
-  <section id="knowledge" style="padding: 26px 6%;">
-    <div class="card">
+  <section id="knowledge" style="padding: 26px var(--page-pad);">
+    <div class="card wrap">
       <div class="card-title">𝐖𝐞𝐛3 𝐊𝐧𝐨𝐰𝐥𝐞𝐝𝐠𝐞 𝐁𝐚𝐬𝐞 📚</div>
       <div style="display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:12px;">
         <div style="background:linear-gradient(145deg,#111,#1b0033); padding:14px; border-radius:10px; border:1px solid rgba(61,0,122,0.08);">
@@ -669,8 +716,8 @@
   </section>
 
   <!-- NOTE TO DEVS -->
-  <section id="note" style="padding: 26px 6%;">
-    <div class="card">
+  <section id="note" style="padding: 26px var(--page-pad);">
+    <div class="card wrap">
       <div class="card-title">𝐍𝐨𝐭𝐞 𝐭𝐨 𝐃𝐞𝐯𝐬 & 𝐅𝐨𝐮𝐧𝐝𝐞𝐫𝐬 💼</div>
 
       <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
@@ -692,7 +739,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <div style="max-width:1100px; margin:0 auto; text-align:center;">
+    <div class="wrap" style="text-align:center;">
       <h3 style="color:#b892ff; margin-bottom:6px;">VIK TOR3</h3>
       <p style="color:#ccc;">&copy; 2025 Designed & Built by @viktorr3 with passion for the Web3 space.</p>
       <p style="color:#9a6cff; margin-top:6px;">⚡ Powered by <strong style="color:#fff;">Web3</strong> • Open to <strong>collaborations</strong> • Let’s <strong>build together</strong>.</p>
@@ -712,7 +759,20 @@
       // Menu toggle
       const toggle = document.querySelector('.menu-toggle');
       const menu = document.getElementById('menu');
-      toggle.addEventListener('click', () => menu.classList.toggle('active'));
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        menu.classList.toggle('active');
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e){
+        const isClickInside = menu.contains(e.target) || toggle.contains(e.target);
+        if (!isClickInside && menu.classList.contains('active')) {
+          menu.classList.remove('active');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
 
       // Smooth scroll with header offset for nav links
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -726,7 +786,10 @@
             const targetY = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
             window.scrollTo({ top: targetY, behavior: 'smooth' });
           }
-          if (menu.classList.contains('active')) menu.classList.remove('active');
+          if (menu.classList.contains('active')) {
+            menu.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
         });
       });
 
@@ -754,12 +817,16 @@
         obs.observe(powBox);
       }
 
-      // Overview fade-in inside coin card (if needed)
+      // Overview fade-in inside coin card
       const overview = document.querySelector('#coin .overview-inner');
       if (overview) {
         const obs2 = new IntersectionObserver(entries => {
           entries.forEach(entry => {
-            if (entry.isIntersecting) { overview.style.opacity = '1'; obs2.unobserve(overview); }
+            if (entry.isIntersecting) {
+              overview.style.opacity = '1';
+              overview.style.transform = 'none';
+              obs2.unobserve(overview);
+            }
           });
         }, { threshold: 0.25 });
         obs2.observe(overview);
@@ -782,7 +849,7 @@
             obsC.unobserve(el);
           }
         });
-      }, { threshold: 0.5 });
+      }, { threshold: 0.45 });
       circles.forEach(c => circleObserver.observe(c));
     });
 
@@ -790,8 +857,12 @@
     function toggleHirePopup() {
       const popup = document.getElementById('hirePopup');
       if (!popup) return;
-      popup.style.display = (popup.style.display === 'flex' || popup.style.display === 'block') ? 'none' : 'flex';
-      if (popup.style.display === 'flex') popup.style.alignItems = 'center';
+      const showing = popup.style.display === 'flex' || popup.style.display === 'block';
+      popup.style.display = showing ? 'none' : 'flex';
+      if (!showing) {
+        popup.style.alignItems = 'center';
+        popup.style.justifyContent = 'center';
+      }
     }
 
     // Auto-close hire popup when clicking outside
